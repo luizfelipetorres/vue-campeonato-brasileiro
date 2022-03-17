@@ -1,8 +1,29 @@
 <template>
+    <v-container>
+
+        <!--Radio buttons de ordem-->
+ <v-radio-group
+            v-model="radio"
+            column
+            >
+            <v-radio
+                label="Ordem decrescente"
+                value="1"
+                color="light-green"
+                @select="radio = '1'"
+            ></v-radio>
+            <v-radio 
+                label="Ordem crescente"
+                value="2"
+                color="light-green"
+                @select="radio = '2'"
+            ></v-radio>
+            </v-radio-group>
+        
+        <!--Tabela-->
         <v-simple-table>
             <template v-slot:default>
             <thead>
-                
                     <tr>         
                         <th class="text-center ">
                             Colocaçãa
@@ -15,7 +36,7 @@
                         </th>
                     </tr>
 
-                <tr v-for="(clube, index) of clubesListaOrdenada" v-bind:key="clube.id">
+                <tr  v-for="(clube, index) of ordenarLista" v-bind:key="clube.id">
                     <td class="text-center"> {{index + 1}} </td>
                     <td class="text-left"> 
                     <v-avatar size="24">
@@ -34,6 +55,7 @@
             </tbody>
             </template>
         </v-simple-table>    
+    </v-container>
 </template>
 
 <script>
@@ -41,7 +63,8 @@ export default {
     name: 'TabelaClubes',
     data(){
         return {
-            clubesLista: []
+            clubesLista: [],
+            radio: '1',
         }
     },
     created(){
@@ -51,13 +74,29 @@ export default {
                 this.clubesLista = json
                 //console.log(this.clubesLista)
             })
+        console.log(this.radio)
+
+
     },
     computed: {
-        clubesListaOrdenada(){
-            const listaOrdenada = this.clubesLista.slice(0).sort(
+        ordenarLista(){
+            let lista
+            if (this.radio == '1'){
+                lista = this.clubesLista.slice(0).sort(
+                    (a, b) =>   a.pontos > b.pontos ? -1 : 1 
+                )
+            }else{
+                lista = this.clubesLista.slice(0).sort(
+                    (a, b) =>   a.pontos > b.pontos ? 1 : -1 
+                )
+            }
+            return lista
+        },
+        listaOrdenada(){
+            const lista = this.clubesLista.slice(0).sort(
                 (a, b) =>   a.pontos > b.pontos ? -1 : 1 
             )
-            return listaOrdenada    
+            return lista
         }
     }
 }
